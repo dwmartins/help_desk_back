@@ -10,7 +10,7 @@ class NewTableUser {
                     user_id INT AUTO_INCREMENT PRIMARY KEY,
                     user_nome VARCHAR(100) NOT NULL,
                     user_sobrenome VARCHAR(100) NOT NULL,
-                    user_email VARCHAR(100) NOT NULL,
+                    user_email VARCHAR(100) NOT NULL UNIQUE,
                     user_password VARCHAR(255) NOT NULL,
                     user_token VARCHAR(255) NOT NULL,
                     user_ativo VARCHAR(1),
@@ -19,8 +19,6 @@ class NewTableUser {
                     user_date_update DATE,
                     user_foto VARCHAR(255));`
                 );
-
-        console.log('ok')
         } catch (error) {
             console.log(`Erro ao criar a tabela de ( Usuários ): ${error}`)
         }
@@ -74,12 +72,16 @@ class NewTableUser {
             console.log(`Erro ao criar a tabela de ( codigo_senha ): ${error}`);
         }
     }
+
+    async createAll() {
+        await table.tablesUser();
+        await table.tableUserType();
+        await table.tableUserAcesso();
+        await table.tableNewPassword();
+    }
 }
 
 const table = new NewTableUser;
-table.tablesUser();
-table.tableUserType();
-table.tableUserAcesso();
-table.tableNewPassword();
+table.createAll();
 
 module.exports = NewTableUser;
