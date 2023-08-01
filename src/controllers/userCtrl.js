@@ -14,6 +14,7 @@ async function createUser(req, res) {
         const password = await encodePassword(user_password);
         const user_date_create = new Date();
         const user =  await userDB.newUser(user_nome, user_sobrenome, user_email, password, token, user_ativo, user_date_create, user_foto);
+        await userDB.addTypeUser(user_tipo, user.userID, user_date_create);
         if(user.success) {
             sendResponse(res, 200, user)
         } else {

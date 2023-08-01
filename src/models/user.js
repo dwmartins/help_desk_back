@@ -24,12 +24,25 @@ class User {
                 user_foto
             ];
 
-            await this.db.pool.query(this.sql, values);
+            const data = await this.db.pool.query(this.sql, values);
 
-            return {success: true, msg: `Usuário(a) criado com sucesso.`};
+            return {success: true, msg: `Usuário(a) criado com sucesso.`, userID: data[0].insertId};
         } catch (error) {
             console.log(error)
             return {erro: error, msg: `Erro ao criar o usuário.`};
+        }
+    }
+
+    async addTypeUser(user_tipo, user_id, data_create) {
+        try {
+            this.sql = `INSERT INTO user_tipo (user_tipo, user_id, tipo_create) VALUES (?, ?, ?);`;
+            const values = [user_tipo, user_id, data_create];
+
+            await this.db.pool.query(this.sql, values);
+
+            return true;
+        } catch (error) {
+            return {erro: error, msg: `Erro salvar o tipo de usuário.`};
         }
     }
 
