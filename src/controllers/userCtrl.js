@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const sendEmail = require('./sendEmail');
 
 const userDB = new User;
 
@@ -14,8 +15,9 @@ async function createUser(req, res) {
         const password = await encodePassword(user_password);
         const user_date_create = new Date();
         const user =  await userDB.newUser(user_nome, user_sobrenome, user_email, password, token, user_ativo, user_date_create, user_foto);
-        await userDB.addTypeUser(user_tipo, user.userID, user_date_create);
         if(user.success) {
+            await userDB.addTypeUser(user_tipo, user.userID, user_date_create);
+            sendEmail.welcome(user_email, user_nome);
             sendResponse(res, 200, user)
         } else {
             sendResponse(res, 500, user);
