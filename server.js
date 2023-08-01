@@ -5,6 +5,7 @@ const app = express();
 const port = process.env.SERVER_PORT;
 require('./config/db');
 require('./src/tables/user');
+const userRoutes = require('./src/routes/userRoutes');
 
 app.use(cors());
 app.use(express.json());
@@ -13,7 +14,7 @@ app.get('/', (req, res) => {
     res.status(200).send(`<h2>running server!</h2>`)
 });
 
-// app.use('/', user);
+app.use('/', userRoutes);
 
 app.use((req, res, next) => {
     const erro = new Error('route not found');

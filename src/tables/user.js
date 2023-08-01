@@ -14,9 +14,9 @@ class NewTableUser {
                     user_password VARCHAR(255) NOT NULL,
                     user_token VARCHAR(255) NOT NULL,
                     user_ativo VARCHAR(1),
-                    user_date_create DATE,
-                    user_date_desable DATE,
-                    user_date_update DATE,
+                    user_create DATETIME,
+                    user_desable DATETIME,
+                    user_update DATETIME,
                     user_foto VARCHAR(255));`
                 );
         } catch (error) {
@@ -31,6 +31,7 @@ class NewTableUser {
                     tipo_id INT AUTO_INCREMENT PRIMARY KEY,
                     user_tipo VARCHAR(255),
                     user_id INT NOT NULL,
+                    tipo_create DATETIME,
                     FOREIGN KEY (user_id) REFERENCES users(user_id)
                 );`
             );
@@ -47,7 +48,7 @@ class NewTableUser {
                     user_id INT NOT NULL,
                     user_email VARCHAR(100) NOT NULL,
                     user_ip VARCHAR(255) NOT NULL,
-                    acesso_data DATE,
+                    acesso_data DATETIME,
                     FOREIGN KEY (user_id) REFERENCES users(user_id)
                 );`
             );
@@ -64,7 +65,7 @@ class NewTableUser {
                     user_id INT NOT NULL,
                     codigo VARCHAR(255) NOT NULL,
                     codigo_usado VARCHAR(255),
-                    data_solicitada DATE NOT NULL,
+                    data_solicitada DATETIME NOT NULL,
                     FOREIGN KEY (user_id) REFERENCES users(user_id)
                 );`
             );
