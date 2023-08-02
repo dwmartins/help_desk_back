@@ -107,12 +107,13 @@ class User {
     async searchUserByEmail(user_email) {
         try {
             this.userByEmail = await this.db.pool.query(`
-                SELECT 
-                    user_id, user_email, user_nome
+                SELECT *  
                 FROM users
-                WHERE user_email = '${user_email}'
+                INNER JOIN user_tipo ON users.user_id = user_tipo.user_id
+                WHERE user_ativo = 'S'
+                AND user_email = '${user_email}'
             ;`);
-            
+
             return this.userByEmail[0][0];
         } catch (error) {
             return {erro: error, msg: `Erro ao buscar o e-mail.`}
@@ -171,6 +172,18 @@ class User {
             return true;
         } catch (error) {
             return {erro: error, msg: `Erro ao atualizar o código de nova senha.`}
+        }
+    }
+
+    async userAccess(user_id, user_email, user_ip, user_acesso_date) {
+        try {
+            this.sql = `INSERT INTO user_acesso (user_id, user_email, user_ip, acesso_data) VALUES (?, ?, ?, ?)`;
+            const values = [user_id, user_email, user_ip, user_acesso_date];
+
+           const result = await this.db.pool.query(this.sql, values);
+            return result;
+        } catch (error) {
+            return {erro: error, msg: `Erro ao salvar o acesso do usuário.`}
         }
     }
 }
