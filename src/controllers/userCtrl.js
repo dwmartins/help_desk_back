@@ -85,6 +85,25 @@ async function newPassword(req, res) {
     }
 }
 
+async function comparePasswordCode(req, res) {
+    const { user_id, code } = req.body;
+    const data = await userDB.comparePasswordCodeDB(user_id, code);
+    
+    if(data) {
+        if(data.codigo_usado) {
+            const response = {alert: `Código de verificação já utilizado`};
+            sendResponse(res, 200, response);
+        } else {
+            const response = {success: true, codigo_id: data.codigo_id, codigo: data.codigo, user_id: data.user_id, msg: `Código validado.`};
+            sendResponse(res, 200, response)
+        }
+       
+    } else {
+        const response = {alert: `Código de verificação incorreto`};
+        sendResponse(res, 200, response) 
+    }
+}
+
 function newCrypto() {
     const secretKey = crypto.randomBytes(32).toString('hex');
     return secretKey;
@@ -120,5 +139,6 @@ module.exports = {
     updateUser,
     updateUserType,
     getAllUsers,
-    newPassword
+    newPassword,
+    comparePasswordCode
 }

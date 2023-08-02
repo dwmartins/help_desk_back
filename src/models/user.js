@@ -130,6 +130,21 @@ class User {
             return {erro: error, msg: `Erro ao salvar o código de nova senha.`}
         }
     }
+
+    async comparePasswordCodeDB(user_id, code) {
+        try {
+            const result = await this.db.pool.query(`
+                SELECT * 
+                FROM codigo_senha
+                WHERE user_id = '${user_id}'
+                AND codigo = '${code}';
+            `)
+
+            return result[0][0];
+        } catch (error) {
+            return {erro: error, msg: `Erro ao buscar o código de alteração de senha.`}
+        }
+    }
 }
 
 module.exports = User;
