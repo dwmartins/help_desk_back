@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const sendEmail = require('./sendEmail');
 
 const userDB = new User;
+const getDateTime = new Date();
 
 async function createUser(req, res) {
     const { user_nome, user_sobrenome, user_email, user_password, user_tipo, user_ativo, user_foto } = req.body;
@@ -13,10 +14,9 @@ async function createUser(req, res) {
 
     if(!emailExists.length) {
         const password = await encodePassword(user_password);
-        const user_date_create = new Date();
-        const user =  await userDB.newUser(user_nome, user_sobrenome, user_email, password, token, user_ativo, user_date_create, user_foto);
+        const user =  await userDB.newUser(user_nome, user_sobrenome, user_email, password, token, user_ativo, getDateTime, user_foto);
         if(user.success) {
-            await userDB.addTypeUser(user_tipo, user.userID, user_date_create);
+            await userDB.addTypeUser(user_tipo, user.userID, getDateTime);
             sendEmail.welcome(user_email, user_nome);
             sendResponse(res, 200, user)
         } else {
@@ -34,10 +34,19 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
     const { user_nome, user_sobrenome, user_id } = req.body;
     
-    const getDateTime = new Date();
-    console.log(getDateTime)
     const user = await userDB.updateUserDB(user_nome, user_sobrenome, getDateTime, user_id);
-    
+
+    if(user.success) {
+        sendResponse(res, 200, user);
+    } else if(user.erro){
+        sendResponse(res, 500, user);
+    }
+}
+
+async function updateUserType(req, res) {
+    const { user_new_tipo, user_id } = req.body;
+    const user = await userDB.updateUserTypeDB(user_new_tipo, getDateTime, user_id);
+
     if(user.success) {
         sendResponse(res, 200, user);
     } else if(user.erro){
@@ -65,5 +74,6 @@ function sendResponse(res, statusCode, msg) {
 
 module.exports = {
     createUser,
-    updateUser
+    updateUser,
+    updateUserType
 }
