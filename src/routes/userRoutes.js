@@ -10,5 +10,6 @@ user.get('/todos-usuarios', userCtrl.getAllUsers);
 
 user.post('/solicita-nova-senha', userCtrl.newPassword)
 user.post('/compare-codigo-senha', userCtrl.comparePasswordCode);
+user.post('/nova-senha', userCtrl.updatePassword);
 
 module.exports = user;

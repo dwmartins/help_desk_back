@@ -145,6 +145,34 @@ class User {
             return {erro: error, msg: `Erro ao buscar o código de alteração de senha.`}
         }
     }
+
+    async updatePasswordDB(user_id, password_hash) {
+        try {
+            this.sql = `UPDATE users
+                            SET user_password = ?
+                            WHERE user_id = ?`;
+            const values = [password_hash, user_id];
+
+            await this.db.pool.query(this.sql, values);
+            return true;
+        } catch (error) {
+            return {erro: error, msg: `Erro ao salvar a nova senha, tente novamente.`}
+        }
+    }
+
+    async updatePasswordCodeDB(code_id) {
+        try {
+            await this.db.pool.query(`
+                UPDATE codigo_senha
+                    SET codigo_usado = 'S'
+                    WHERE codigo_id = '${code_id}'
+            `);
+
+            return true;
+        } catch (error) {
+            return {erro: error, msg: `Erro ao atualizar o código de nova senha.`}
+        }
+    }
 }
 
 module.exports = User;

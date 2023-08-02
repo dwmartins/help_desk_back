@@ -94,13 +94,33 @@ async function comparePasswordCode(req, res) {
             const response = {alert: `Código de verificação já utilizado`};
             sendResponse(res, 200, response);
         } else {
-            const response = {success: true, codigo_id: data.codigo_id, codigo: data.codigo, user_id: data.user_id, msg: `Código validado.`};
+            const response = {success: true, code_id: data.code_id, codigo: data.codigo, user_id: data.user_id, msg: `Código validado.`};
             sendResponse(res, 200, response)
         }
        
     } else {
         const response = {alert: `Código de verificação incorreto`};
         sendResponse(res, 200, response) 
+    }
+}
+
+async function updatePassword(req, res) {
+    const { user_id, new_password, code_id } = req.body;
+    const password_hash = await encodePassword(new_password);
+
+    if(password_hash) {
+        const newPassword = await userDB.updatePasswordDB(user_id, password_hash);
+        if(newPassword) {
+            const response = {success: true, msg: `Senha alterada com sucesso.`};
+            userDB.updatePasswordCodeDB(code_id);
+            sendResponse(res, 200, response);
+        } else {
+            const response = {erro: newPassword.erro, msg: `Erro ao alterar a senha, tente novamente.`};
+            sendResponse(res, 500, response);
+        }
+    } else {
+        const response = {erro: password_hash.erro, msg: `Erro ao alterar a senha, tente novamente.`};
+        sendResponse(res, 500, response);
     }
 }
 
@@ -140,5 +160,6 @@ module.exports = {
     updateUserType,
     getAllUsers,
     newPassword,
-    comparePasswordCode
+    comparePasswordCode,
+    updatePassword
 }
