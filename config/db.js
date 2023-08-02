@@ -23,7 +23,7 @@ class Database {
             return this.pool;
         } catch (error) {
             console.error('Erro ao conectar ao banco de dados:', error.message);
-            throw error;
+            console.error(`slq error status: ${error.sqlState}`);
         }
     }
 
