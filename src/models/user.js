@@ -55,7 +55,7 @@ class User {
 
             const values = [user_nome, user_sobrenome, user_update, user_id]
             await this.db.pool.query(this.sql, values);
-            
+
             return {success: true, msg: `Usuário atualizado com sucesso.`}
         } catch (error) {
             return {erro: error, msg: `Erro ao atualizar o usuário`}
@@ -68,6 +68,22 @@ class User {
             return result[0];
         } catch (error) {
             return {erro: error, msg: `Erro ao verificar se o e-mail é existente.`}
+        }
+    }
+
+    async updateUserTypeDB(user_tipo, tipe_update, user_id) {
+        try {
+            this.sql = `UPDATE user_tipo
+                        SET user_tipo = ?,
+                            tipo_update = ?
+                        WHERE user_id = ?`;
+
+            const values = [user_tipo, tipe_update, user_id];
+            await this.db.pool.query(this.sql, values);
+
+            return {success: true, msg: `Tipo de usuário atualizado com sucesso.`}
+        } catch (error) {
+            return {erro: error, msg: `Erro ao atualizar o tipo do usuário`}
         }
     }
 }

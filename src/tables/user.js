@@ -32,6 +32,7 @@ class NewTableUser {
                     user_tipo VARCHAR(255),
                     user_id INT NOT NULL,
                     tipo_create DATETIME,
+                    tipo_update DATETIME,
                     FOREIGN KEY (user_id) REFERENCES users(user_id)
                 );`
             );
