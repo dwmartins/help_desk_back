@@ -124,6 +124,33 @@ async function updatePassword(req, res) {
     }
 }
 
+async function userLogin(req, res) {
+    const { user_email, user_password } = req.body;
+    const user = await userDB.searchUserByEmail(user_email);
+    if(user) {  
+        const password_hash = await comparePasswordHash(user_password, user.user_password);
+        
+        if(password_hash) {
+            const payload  = { email: user.user_email };
+            const token = jwt.sign(payload, user.user_token);
+            delete user.user_token;
+            delete user.user_password;
+            
+            const data = {success: true, user_token: token, userData: user};
+            const user_ip = req.ip.replace('::ffff:', '');
+    
+            userDB.userAccess(user.user_id, user_email, user_ip, getDateTime);
+            sendResponse(res, 200, data);
+        } else {
+            sendResponse(res, 200, {alert: `Usuário ou senha inválidos.`});
+        }
+    } else if(!user) {
+        sendResponse(res, 200, {alert: `Usuário ou senha inválidos.`});
+    } else if(user.erro){
+        sendResponse(res, 500, user);
+    }
+}
+
 function newCrypto() {
     const secretKey = crypto.randomBytes(32).toString('hex');
     return secretKey;
@@ -135,6 +162,15 @@ async function encodePassword(password) {
         return hash
     } catch (error) {
         return {erro: error, msg: `Erro ao codificar a senha.`}
+    }
+}
+
+async function comparePasswordHash(req_password, hash) {
+    try {
+        const result = await bcrypt.compare(req_password, hash);
+        return result;
+    } catch (error) {
+        return {erro: error, msg: `Erro ao comparar a senha.`};
     }
 }
 
@@ -161,5 +197,6 @@ module.exports = {
     getAllUsers,
     newPassword,
     comparePasswordCode,
-    updatePassword
+    updatePassword,
+    userLogin
 }
