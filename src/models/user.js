@@ -5,6 +5,7 @@ class User {
     db;
     sql;
     all_user_Data;
+    userByEmail;
 
     constructor() {
         this.db = new DataBase;
@@ -100,6 +101,76 @@ class User {
             return this.all_user_Data[0];
         } catch (error) {
             return {erro: error, msg: `Erro ao buscar os usuários.`}
+        }
+    }
+
+    async searchUserByEmail(user_email) {
+        try {
+            this.userByEmail = await this.db.pool.query(`
+                SELECT 
+                    user_id, user_email, user_nome
+                FROM users
+                WHERE user_email = '${user_email}'
+            ;`);
+            
+            return this.userByEmail[0][0];
+        } catch (error) {
+            return {erro: error, msg: `Erro ao buscar o e-mail.`}
+        }
+    }
+
+    async saveCodePassword(user_id, user_codigo, requested_date) {
+        try {
+            this.sql = `INSERT INTO codigo_senha (user_id, codigo, data_solicitada) VALUES (?,?,?);`;
+            const values = [user_id, user_codigo, requested_date];
+
+            await this.db.pool.query(this.sql, values);
+            return true;
+        } catch (error) {
+            return {erro: error, msg: `Erro ao salvar o código de nova senha.`}
+        }
+    }
+
+    async comparePasswordCodeDB(user_id, code) {
+        try {
+            const result = await this.db.pool.query(`
+                SELECT * 
+                FROM codigo_senha
+                WHERE user_id = '${user_id}'
+                AND codigo = '${code}';
+            `)
+
+            return result[0][0];
+        } catch (error) {
+            return {erro: error, msg: `Erro ao buscar o código de alteração de senha.`}
+        }
+    }
+
+    async updatePasswordDB(user_id, password_hash) {
+        try {
+            this.sql = `UPDATE users
+                            SET user_password = ?
+                            WHERE user_id = ?`;
+            const values = [password_hash, user_id];
+
+            await this.db.pool.query(this.sql, values);
+            return true;
+        } catch (error) {
+            return {erro: error, msg: `Erro ao salvar a nova senha, tente novamente.`}
+        }
+    }
+
+    async updatePasswordCodeDB(code_id) {
+        try {
+            await this.db.pool.query(`
+                UPDATE codigo_senha
+                    SET codigo_usado = 'S'
+                    WHERE codigo_id = '${code_id}'
+            `);
+
+            return true;
+        } catch (error) {
+            return {erro: error, msg: `Erro ao atualizar o código de nova senha.`}
         }
     }
 }

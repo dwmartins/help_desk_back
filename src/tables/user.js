@@ -64,8 +64,8 @@ class NewTableUser {
                 CREATE TABLE IF NOT EXISTS codigo_senha (
                     codigo_id INT AUTO_INCREMENT PRIMARY KEY,
                     user_id INT NOT NULL,
-                    codigo VARCHAR(255) NOT NULL,
-                    codigo_usado VARCHAR(255),
+                    codigo VARCHAR(100) NOT NULL,
+                    codigo_usado VARCHAR(1),
                     data_solicitada DATETIME NOT NULL,
                     FOREIGN KEY (user_id) REFERENCES users(user_id)
                 );`
