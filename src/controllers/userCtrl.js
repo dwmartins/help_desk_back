@@ -54,6 +54,15 @@ async function updateUserType(req, res) {
     }
 }
 
+async function getAllUsers(req, res) {
+    const users = await userDB.allUsers();
+    if(users.length) {
+        sendResponse(res, 200, users);
+    } else if(users.erro) {
+        sendResponse(res, 500, users);
+    }
+}
+
 function newCrypto() {
     const secretKey = crypto.randomBytes(32).toString('hex');
     return secretKey;
@@ -75,5 +84,6 @@ function sendResponse(res, statusCode, msg) {
 module.exports = {
     createUser,
     updateUser,
-    updateUserType
+    updateUserType,
+    getAllUsers
 }

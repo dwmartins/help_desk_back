@@ -4,6 +4,7 @@ class User {
 
     db;
     sql;
+    all_user_Data;
 
     constructor() {
         this.db = new DataBase;
@@ -84,6 +85,21 @@ class User {
             return {success: true, msg: `Tipo de usuário atualizado com sucesso.`}
         } catch (error) {
             return {erro: error, msg: `Erro ao atualizar o tipo do usuário`}
+        }
+    }
+
+    async allUsers() {
+        try {
+            this.all_user_Data = await this.db.pool.query(`
+                SELECT *
+                    FROM users
+                        INNER JOIN user_tipo ON user_tipo.user_id = users.user_id
+                    WHERE users.user_ativo = 'S'
+            `);
+
+            return this.all_user_Data[0];
+        } catch (error) {
+            return {erro: error, msg: `Erro ao buscar os usuários.`}
         }
     }
 }
