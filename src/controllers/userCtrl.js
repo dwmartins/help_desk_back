@@ -31,6 +31,20 @@ async function createUser(req, res) {
     }
 }
 
+async function updateUser(req, res) {
+    const { user_nome, user_sobrenome, user_id } = req.body;
+    
+    const getDateTime = new Date();
+    console.log(getDateTime)
+    const user = await userDB.updateUserDB(user_nome, user_sobrenome, getDateTime, user_id);
+    
+    if(user.success) {
+        sendResponse(res, 200, user);
+    } else if(user.erro){
+        sendResponse(res, 500, user);
+    }
+}
+
 function newCrypto() {
     const secretKey = crypto.randomBytes(32).toString('hex');
     return secretKey;
@@ -50,5 +64,6 @@ function sendResponse(res, statusCode, msg) {
 }
 
 module.exports = {
-    createUser
+    createUser,
+    updateUser
 }
