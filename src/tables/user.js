@@ -67,6 +67,7 @@ class NewTableUser {
                     codigo VARCHAR(100) NOT NULL,
                     codigo_usado VARCHAR(1),
                     data_solicitada DATETIME NOT NULL,
+                    data_utilizado DATETIME NOT NULL,
                     FOREIGN KEY (user_id) REFERENCES users(user_id)
                 );`
             );

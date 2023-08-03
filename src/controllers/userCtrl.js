@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 const sendEmail = require('./sendEmail');
 
 const userDB = new User;
-const getDateTime = new Date();
 
 async function createUser(req, res) {
     const { user_nome, user_sobrenome, user_email, user_password, user_tipo, user_ativo, user_foto } = req.body;
@@ -14,9 +13,9 @@ async function createUser(req, res) {
 
     if(!emailExists.length) {
         const password = await encodePassword(user_password);
-        const user =  await userDB.newUser(user_nome, user_sobrenome, user_email, password, token, user_ativo, getDateTime, user_foto);
+        const user =  await userDB.newUser(user_nome, user_sobrenome, user_email, password, token, user_ativo, new Date(), user_foto);
         if(user.success) {
-            userDB.addTypeUser(user_tipo, user.userID, getDateTime);
+            userDB.addTypeUser(user_tipo, user.userID, new Date());
             sendEmail.welcome(user_email, user_nome);
             sendResponse(res, 200, user)
         } else {
@@ -34,7 +33,7 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
     const { user_nome, user_sobrenome, user_id } = req.body;
     
-    const user = await userDB.updateUserDB(user_nome, user_sobrenome, getDateTime, user_id);
+    const user = await userDB.updateUserDB(user_nome, user_sobrenome, new Date(), user_id);
 
     if(user.success) {
         sendResponse(res, 200, user);
@@ -45,7 +44,7 @@ async function updateUser(req, res) {
 
 async function updateUserType(req, res) {
     const { user_new_tipo, user_id } = req.body;
-    const user = await userDB.updateUserTypeDB(user_new_tipo, getDateTime, user_id);
+    const user = await userDB.updateUserTypeDB(user_new_tipo, new Date(), user_id);
 
     if(user.success) {
         sendResponse(res, 200, user);
@@ -70,7 +69,7 @@ async function newPassword(req, res) {
     if(user) {
         const code = generateAlphanumericCode(6);
 
-        const saveCode = await userDB.saveCodePassword(user.user_id, code, getDateTime);
+        const saveCode = await userDB.saveCodePassword(user.user_id, code, new Date());
 
         if(saveCode) {
             sendEmail.newPassword(user.user_email, user.user_nome, code);
@@ -94,7 +93,7 @@ async function comparePasswordCode(req, res) {
             const response = {alert: `Código de verificação já utilizado`};
             sendResponse(res, 200, response);
         } else {
-            const response = {success: true, code_id: data.code_id, codigo: data.codigo, user_id: data.user_id, msg: `Código validado.`};
+            const response = {success: true, code_id: data.codigo_id, codigo: data.codigo, user_id: data.user_id, msg: `Código validado com sucesso.`};
             sendResponse(res, 200, response)
         }
        
@@ -112,7 +111,7 @@ async function updatePassword(req, res) {
         const newPassword = await userDB.updatePasswordDB(user_id, password_hash);
         if(newPassword) {
             const response = {success: true, msg: `Senha alterada com sucesso.`};
-            userDB.updatePasswordCodeDB(code_id);
+            userDB.updatePasswordCodeDB(code_id, new Date());
             sendResponse(res, 200, response);
         } else {
             const response = {erro: newPassword.erro, msg: `Erro ao alterar a senha, tente novamente.`};
@@ -139,7 +138,7 @@ async function userLogin(req, res) {
             const data = {success: true, user_token: token, userData: user};
             const user_ip = req.ip.replace('::ffff:', '');
     
-            userDB.userAccess(user.user_id, user_email, user_ip, getDateTime);
+            userDB.userAccess(user.user_id, user_email, user_ip, new Date());
             sendResponse(res, 200, data);
         } else {
             sendResponse(res, 200, {alert: `Usuário ou senha inválidos.`});
@@ -153,7 +152,7 @@ async function userLogin(req, res) {
 
 async function disableUser (req, res) {
     const { user_id, user_action } = req.query
-    const user = userDB.disableUserDB(user_id, user_action, getDateTime);
+    const user = userDB.disableUserDB(user_id, user_action, new Date());
     const action = user_action === 'S' ? "habilitado" : "desabilitado";
 
     if(user) {

@@ -161,14 +161,15 @@ class User {
         }
     }
 
-    async updatePasswordCodeDB(code_id) {
+    async updatePasswordCodeDB(code_id, data_utilizado) {
         try {
-            await this.db.pool.query(`
-                UPDATE codigo_senha
-                    SET codigo_usado = 'S'
-                    WHERE codigo_id = '${code_id}'
-            `);
-
+            this.sql = `UPDATE codigo_senha
+                            SET codigo_usado = ?,
+                            data_utilizado = ?
+                            WHERE codigo_id = ?
+            `;
+            const values = ['S', data_utilizado, code_id];
+            await this.db.pool.query(this.sql, values);
             return true;
         } catch (error) {
             return {erro: error, msg: `Erro ao atualizar o código de nova senha.`}
