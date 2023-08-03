@@ -55,7 +55,7 @@ async function updateUserType(req, res) {
 
 async function getAllUsers(req, res) {
     const users = await userDB.allUsers();
-    if(users.length) {
+    if(users) {
         sendResponse(res, 200, users);
     } else if(users.erro) {
         sendResponse(res, 500, users);
