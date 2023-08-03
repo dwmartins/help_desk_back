@@ -151,6 +151,19 @@ async function userLogin(req, res) {
     }
 }
 
+async function disableUser (req, res) {
+    const { user_id, user_action } = req.query
+    const user = userDB.disableUserDB(user_id, user_action, getDateTime);
+    const action = user_action === 'S' ? "habilitado" : "desabilitado";
+
+    if(user) {
+        sendResponse(res, 200, {success: true, msg: `Usuário ${action} com sucesso.`});
+    } else if(user.erro) {
+        sendResponse(res, 200, {erro: user.erro, msg: `Erro ao ${action} o usuário.`})
+    }
+}
+
+// -------------- Utilities ---------------//
 function newCrypto() {
     const secretKey = crypto.randomBytes(32).toString('hex');
     return secretKey;
@@ -198,5 +211,6 @@ module.exports = {
     newPassword,
     comparePasswordCode,
     updatePassword,
-    userLogin
+    userLogin,
+    disableUser
 }

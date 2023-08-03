@@ -14,4 +14,6 @@ user.post('/solicita-nova-senha', userCtrl.newPassword)
 user.post('/compare-codigo-senha', userCtrl.comparePasswordCode);
 user.post('/nova-senha', userCtrl.updatePassword);
 
+user.put('/desabilita-usuario/', userCtrl.disableUser);
+
 module.exports = user;

@@ -15,7 +15,7 @@ class NewTableUser {
                     user_token VARCHAR(255) NOT NULL,
                     user_ativo VARCHAR(1),
                     user_create DATETIME,
-                    user_desable DATETIME,
+                    user_disable DATETIME,
                     user_update DATETIME,
                     user_foto VARCHAR(255));`
                 );

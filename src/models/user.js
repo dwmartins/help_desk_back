@@ -186,6 +186,18 @@ class User {
             return {erro: error, msg: `Erro ao salvar o acesso do usuário.`}
         }
     }
+
+    async disableUserDB(user_id, action, date_desable) {
+        try {
+            this.sql = `UPDATE users SET user_ativo = ?, user_disable = ? WHERE user_id = ?`;
+            const values = [action, date_desable, user_id];
+
+            this.db.pool.query(this.sql, values);
+            return true;
+        } catch (error) {
+            return {erro: error}
+        }
+    }
 }
 
 module.exports = User;
