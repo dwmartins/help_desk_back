@@ -199,6 +199,18 @@ class User {
             return {erro: error}
         }
     }
+
+    async fetchUserToken(user_id) {
+        try {
+            this.sql = `SELECT user_token FROM users WHERE user_id = ?`;
+            const values = [user_id];
+
+            const result = await this.db.pool.query(this.sql, values);
+            return result[0][0];
+        } catch (error) {
+            return {erro: error, msg: `Erro ao buscar o validar o token.`};
+        }
+    }
 }
 
 module.exports = User;
