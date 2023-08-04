@@ -14,9 +14,9 @@ class NewTableUser {
                     user_password VARCHAR(255) NOT NULL,
                     user_token VARCHAR(255) NOT NULL,
                     user_ativo VARCHAR(1),
-                    user_create DATETIME,
+                    createdAt DATETIME,
                     user_disable DATETIME,
-                    user_update DATETIME,
+                    updateAt DATETIME,
                     user_foto VARCHAR(255));`
                 );
         } catch (error) {
@@ -31,8 +31,8 @@ class NewTableUser {
                     tipo_id INT AUTO_INCREMENT PRIMARY KEY,
                     user_tipo VARCHAR(255),
                     user_id INT NOT NULL,
-                    tipo_create DATETIME,
-                    tipo_update DATETIME,
+                    createdAt DATETIME,
+                    updateAt DATETIME,
                     FOREIGN KEY (user_id) REFERENCES users(user_id)
                 );`
             );
@@ -49,7 +49,7 @@ class NewTableUser {
                     user_id INT NOT NULL,
                     user_email VARCHAR(100) NOT NULL,
                     user_ip VARCHAR(255) NOT NULL,
-                    acesso_data DATETIME,
+                    createdAt DATETIME,
                     FOREIGN KEY (user_id) REFERENCES users(user_id)
                 );`
             );
@@ -66,8 +66,8 @@ class NewTableUser {
                     user_id INT NOT NULL,
                     codigo VARCHAR(100) NOT NULL,
                     codigo_usado VARCHAR(1),
-                    data_solicitada DATETIME NOT NULL,
-                    data_utilizado DATETIME NOT NULL,
+                    createdAt DATETIME NOT NULL,
+                    updateAt DATETIME NOT NULL,
                     FOREIGN KEY (user_id) REFERENCES users(user_id)
                 );`
             );
@@ -76,11 +76,12 @@ class NewTableUser {
         }
     }
 
+    // Cria as tabelas em ordem para não houver erro de chaves estrangeras por não existir as tabelas;
     async createAll() {
-        await table.tablesUser();
-        await table.tableUserType();
-        await table.tableUserAcesso();
-        await table.tableNewPassword();
+        await this.tablesUser();
+        await this.tableUserType();
+        await this.tableUserAcesso();
+        await this.tableNewPassword();
     }
 }
 
