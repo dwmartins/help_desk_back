@@ -27,11 +27,7 @@ class Database {
         }
     }
 
-    async createTablesUser() {
-
-    }
 }
-
 
 const conn = new Database;
 conn.connect();
