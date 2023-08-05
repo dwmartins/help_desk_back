@@ -13,7 +13,7 @@ class User {
 
     async newUser(user_nome, user_sobrenome, user_email, user_password, user_token, user_ativo, user_create, user_foto) {
         try {
-            this.sql = `INSERT INTO users (user_nome, user_sobrenome, user_email, user_password, user_token, user_ativo, user_create, user_foto )
+            this.sql = `INSERT INTO users (user_nome, user_sobrenome, user_email, user_password, user_token, user_ativo, createdAt, user_foto )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?);`
             const values = [
                 user_nome,
@@ -36,7 +36,7 @@ class User {
 
     async addTypeUser(user_tipo, user_id, data_create) {
         try {
-            this.sql = `INSERT INTO user_tipo (user_tipo, user_id, tipo_create) VALUES (?, ?, ?);`;
+            this.sql = `INSERT INTO user_tipo (user_tipo, user_id, createdAt) VALUES (?, ?, ?);`;
             const values = [user_tipo, user_id, data_create];
 
             await this.db.pool.query(this.sql, values);
@@ -52,7 +52,7 @@ class User {
             this.sql = `UPDATE users
                         SET user_nome = ?,
                             user_sobrenome = ?,
-                            user_update = ?
+                            updateAt = ?
                         WHERE user_id = ?`;
 
             const values = [user_nome, user_sobrenome, user_update, user_id]
@@ -77,7 +77,7 @@ class User {
         try {
             this.sql = `UPDATE user_tipo
                         SET user_tipo = ?,
-                            tipo_update = ?
+                            updateAt = ?
                         WHERE user_id = ?`;
 
             const values = [user_tipo, tipe_update, user_id];
@@ -122,7 +122,7 @@ class User {
 
     async saveCodePassword(user_id, user_codigo, requested_date) {
         try {
-            this.sql = `INSERT INTO codigo_senha (user_id, codigo, data_solicitada) VALUES (?,?,?);`;
+            this.sql = `INSERT INTO codigo_senha (user_id, codigo, createdAt) VALUES (?,?,?);`;
             const values = [user_id, user_codigo, requested_date];
 
             await this.db.pool.query(this.sql, values);
@@ -165,7 +165,7 @@ class User {
         try {
             this.sql = `UPDATE codigo_senha
                             SET codigo_usado = ?,
-                            data_utilizado = ?
+                                updateAt = ?
                             WHERE codigo_id = ?
             `;
             const values = ['S', data_utilizado, code_id];
@@ -178,7 +178,7 @@ class User {
 
     async userAccess(user_id, user_email, user_ip, user_acesso_date) {
         try {
-            this.sql = `INSERT INTO user_acesso (user_id, user_email, user_ip, acesso_data) VALUES (?, ?, ?, ?)`;
+            this.sql = `INSERT INTO user_acesso (user_id, user_email, user_ip, createdAt) VALUES (?, ?, ?, ?)`;
             const values = [user_id, user_email, user_ip, user_acesso_date];
 
            const result = await this.db.pool.query(this.sql, values);
