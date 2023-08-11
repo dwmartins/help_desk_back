@@ -28,7 +28,7 @@ class User {
 
             const data = await this.db.pool.query(this.sql, values);
 
-            return {success: true, msg: `Usuário(a) criado com sucesso.`, userID: data[0].insertId};
+            return {success: true, msg: `Usuário criado com sucesso.`, userID: data[0].insertId};
         } catch (error) {
             return {erro: error, msg: `Erro ao criar o usuário.`};
         }
