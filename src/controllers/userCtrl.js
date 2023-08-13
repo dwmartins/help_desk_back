@@ -80,7 +80,7 @@ async function newPassword(req, res) {
             sendResponse(res, 500, response);
         }
     } else {
-        sendResponse(res, 400, {alert: `Usuário não encontrado.`});
+        sendResponse(res, 200, {success: false, alert: `Usuário não encontrado.`});
     }
 }
 
@@ -90,7 +90,7 @@ async function comparePasswordCode(req, res) {
     
     if(data) {
         if(data.codigo_usado) {
-            const response = {alert: `Código de verificação já utilizado`};
+            const response = {success: false, alert: `Código de verificação já utilizado`};
             sendResponse(res, 200, response);
         } else {
             const response = {success: true, code_id: data.codigo_id, codigo: data.codigo, user_id: data.user_id, msg: `Código validado com sucesso.`};
@@ -98,7 +98,7 @@ async function comparePasswordCode(req, res) {
         }
        
     } else {
-        const response = {alert: `Código de verificação incorreto`};
+        const response = {success: false, alert: `Código de verificação incorreto`};
         sendResponse(res, 200, response) 
     }
 }
