@@ -7,6 +7,7 @@ const port = process.env.SERVER_PORT;
 require('./config/db');
 
 const userRoutes = require('./src/routes/userRoutes');
+const calledRoutes = require('./src/routes/calledRoutes');
 
 app.use(cors());
 app.use(express.json());
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', userRoutes);
+app.use('/chamados', calledRoutes);
 
 app.use((req, res, next) => {
     const erro = new Error('route not found');
