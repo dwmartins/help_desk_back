@@ -14,10 +14,21 @@ async function newCalled(req, res) {
     }
 }
 
+async function getAllCalled(req, res) {
+    const result = await calledDB.getAllCalledDB();
+
+    if(result.success) {
+        sendResponse(res, 200, result);
+    } else {
+        sendResponse(res, 500, result);
+    }
+}
+
 function sendResponse(res, statusCode, msg) {
     res.status(statusCode).json(msg);
 }
 
 module.exports = {
-    newCalled
+    newCalled,
+    getAllCalled
 }
