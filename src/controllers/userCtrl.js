@@ -108,7 +108,7 @@ async function updatePassword(req, res) {
     const password_hash = await encodePassword(new_password);
 
     if(password_hash) {
-        const newPassword = await userDB.updatePasswordDB(user_id, password_hash);
+        const newPassword = await userDB.updatePasswordDB(user_id, password_hash, new Date());
         if(newPassword) {
             const response = {success: true, msg: `Senha alterada com sucesso.`};
             userDB.updatePasswordCodeDB(code_id, new Date());

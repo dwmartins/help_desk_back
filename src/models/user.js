@@ -147,12 +147,14 @@ class User {
         }
     }
 
-    async updatePasswordDB(user_id, password_hash) {
+    async updatePasswordDB(user_id, password_hash, date) {
         try {
             this.sql = `UPDATE users
-                            SET user_password = ?
+                            SET 
+                            user_password = ?,
+                            updateAt = ?
                             WHERE user_id = ?`;
-            const values = [password_hash, user_id];
+            const values = [password_hash, date, user_id];
 
             await this.db.pool.query(this.sql, values);
             return true;
