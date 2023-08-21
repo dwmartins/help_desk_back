@@ -21,7 +21,7 @@ class Called {
                 called.titulo,
                 called.descricao,
                 called.prioridade,
-                called.status,
+                'Pendente',
                 called.categoria,
                 new Date()
             ]
@@ -72,6 +72,36 @@ class Called {
             return true;
         } catch (error) {
             return false;
+        }
+    }
+
+    async executeData(called) {
+        try {
+            this.sql = `UPDATE dados_chamado
+                        SET solucao = ?,
+                            updateAt = ?
+                        WHERE chamado_id = ?`;
+            const values = [called.solution, new Date(), called.called_id];
+            await this.db.pool.query(this.sql, values);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async updateData(called) {
+        try {
+            this.sql = `UPDATE dados_chamado
+                        SET resp_id = ?,
+                            resp_nome = ?, 
+                            updateAt = ?
+                        WHERE chamado_id = ?`;
+            const values = [called.resp_id, called.resp_nome, new Date(), called.called_id];
+            await this.db.pool.query(this.sql, values);
+            return true;
+        } catch (error) {
+            console.log(`Erro ao atualizar os dados do chamado: ${error}`);
+            return false;   
         }
     }
 }

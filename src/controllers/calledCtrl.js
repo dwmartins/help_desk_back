@@ -39,6 +39,21 @@ async function executeCalled(req, res) {
     } else {
         sendResponse(res, 500, {success: false, msg: `Erro ao atualizar o status do chamado.`})
     }
+}
+
+async function endsCalled(req, res) {
+    const called = req.body;
+
+    const updateStatus = calledDB.updateStatusDB(called.called_id, 'Finalizado');
+    const updateDados = calledDB.executeData(called);
+
+    await Promise.all([updateStatus, updateDados]);
+
+    if(updateStatus && updateDados) {
+        sendResponse(res, 200, {success: true, msg: `Chamado finalizado com sucesso.`});
+    } else {
+        sendResponse(res, 500, {success: false, msg: `Erro ao finalizar o chamado.`});
+    }
 
 }
 
@@ -49,5 +64,6 @@ function sendResponse(res, statusCode, msg) {
 module.exports = {
     newCalled,
     getAllCalled,
-    executeCalled
+    executeCalled,
+    endsCalled
 }
