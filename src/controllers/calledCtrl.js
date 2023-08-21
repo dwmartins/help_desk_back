@@ -35,7 +35,7 @@ async function executeCalled(req, res) {
     await Promise.all([updateStatus, updateDados]);
 
     if(updateStatus && updateDados) {
-        sendResponse(res, 201, {success: true, msg: `Chamado em execução com sucesso.`});
+        sendResponse(res, 201, {success: true, msg: `Chamado em execução.`});
     } else {
         sendResponse(res, 500, {success: false, msg: `Erro ao atualizar o status do chamado.`})
     }
