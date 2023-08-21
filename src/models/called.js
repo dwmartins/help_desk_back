@@ -1,3 +1,5 @@
+'use strict';
+
 const DataBase = require('../../config/db');
 
 class Called {
@@ -40,6 +42,36 @@ class Called {
             return {success: true, called: this.AllCalled[0]};
         } catch (error) {
             return {erro: error, msg: `Erro ao buscar os chamados.`};
+        }
+    }
+
+    async updateStatusDB(called_id, status) {
+        try {
+            this.sql = `UPDATE chamados
+                        SET 
+                            status = ?,
+                            updateAt = ?
+                        WHERE chamado_id = ?`;
+            const values = [status, new Date(), called_id];
+
+            await this.db.pool.query(this.sql, values);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async insertData(called) {
+        try {
+            this.sql = `INSERT INTO dados_chamado
+                            (chamado_id, resp_id, resp_nome, createdAt)
+                        VALUES
+                            (?, ?, ?, ?)`;
+            const values = [called.called_id, called.resp_id, called.resp_nome, new Date()];
+            await this.db.pool.query(this.sql, values);
+            return true;
+        } catch (error) {
+            return false;
         }
     }
 }
