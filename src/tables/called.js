@@ -32,6 +32,7 @@ class NewTableCalled {
                     chamado_id INT NOT NULL,
                     resp_id INT,
                     resp_nome VARCHAR(100),
+                    solucao BLOB,
                     createdAt DATETIME,
                     updateAt DATETIME,
                     FOREIGN KEY (resp_id) REFERENCES users(user_id),
