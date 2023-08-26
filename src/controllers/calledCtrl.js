@@ -20,7 +20,7 @@ async function getAllCalled(req, res) {
     const result = await calledDB.getAllCalledDB();
 
     if(result.success) {
-        sendResponse(res, 200, result);
+        sendResponse(res, 200, result.called);
     } else {
         sendResponse(res, 500, result);
     }
