@@ -36,8 +36,10 @@ class Called {
     async getAllCalledDB() {
         try {
             this.AllCalled = await this.db.pool.query(`
-                SELECT * 
-                    FROM chamados
+                SELECT chamados.chamado_id, chamados.user_id, chamados.titulo, chamados.descricao, chamados.prioridade, chamados.status, chamados.categoria, chamados.createdAt, chamados.updateAt,
+                    users.user_nome, users.user_sobrenome, users.user_email
+                FROM chamados
+                INNER JOIN users ON users.user_id = chamados.user_id
             `);
             return {success: true, called: this.AllCalled[0]};
         } catch (error) {
